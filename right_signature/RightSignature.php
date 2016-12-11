@@ -2,6 +2,8 @@
 
 namespace right_signature;
 
+use right_signature\api\Documents;
+
 class RightSignature
 {
     const BASE_URL = 'https://rightsignature.com';
@@ -10,21 +12,46 @@ class RightSignature
     private $result_type = self::RESULT_TYPE_SIMPLE_XML;
     private $token;
 
+    /**
+     * Set token
+     * @param string $token
+     */
     public function __construct($token)
     {
         $this->token = $token;
     }
 
+    /**
+     * @return Documents
+     */
+    public function loadDocumentsApi()
+    {
+        return new Documents($this->token);
+    }
+
+    /**
+     * Change the returned result type from request
+     * @param string $type self::RESULT_TYPE_XML or self::RESULT_TYPE_SIMPLE_XML
+     */
     public function setResultType($type)
     {
         $this->result_type = $type;
     }
 
+    /**
+     * @return string result type
+     */
     public function getResultType()
     {
         return $this->result_type;
     }
 
+    /**
+     * Prepare result to current type
+     * @param string $result
+     * @return string|\SimpleXMLElement
+     * @throws \Exception - Wrong type result
+     */
     protected function prepareResult($result)
     {
         if ($this->result_type == self::RESULT_TYPE_XML) {
@@ -36,6 +63,14 @@ class RightSignature
         else throw new \Exception('Wrong type result');
     }
 
+    /**
+     * Send request to server from curl
+     * @param string $path
+     * @param boolean $is_post
+     * @param boolean $body
+     * @throws \Exception
+     * @return mixed - xml string
+     */
     public function request($path, $is_post = false, $body = null)
     {
         $curl = curl_init();
@@ -67,6 +102,13 @@ class RightSignature
         }
     }
 
+    /**
+     * Create xml from array
+     * @param array $array
+     * @param \DOMElement $base_element
+     * @param string $base_key
+     * @return \DOMDocument
+     */
     protected function buildXmlFromArray(array $array, \DOMElement &$base_element = null, $base_key = null)
     {
         $xml = new \DOMDocument("1.0", "utf-8");
@@ -89,6 +131,11 @@ class RightSignature
         return $xml;
     }
 
+    /**
+     * Convert object to array
+     * @param \SimpleXMLElement $xml_object
+     * @return array
+     */
     protected function objectToArray($xml_object)
     {
         $out = [];

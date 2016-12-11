@@ -16,7 +16,7 @@ class Documents extends RightSignature
      * @param integer $page
      * @param integer $per_page
      *
-     * @return string | \SimpleXMLElement
+     * @return string|\SimpleXMLElement
      */
     public function getList($page = 1, $per_page = 10)
     {
@@ -31,7 +31,7 @@ class Documents extends RightSignature
      *
      * @param string $guid the document number in RightSignature field guid in getList return
      *
-     * @return string | \SimpleXMLElement
+     * @return string|\SimpleXMLElement
      */
     public function getDetails($guid)
     {
@@ -46,7 +46,7 @@ class Documents extends RightSignature
      *
      * @param string $guid the document number in RightSignature field guid in getList return
      *
-     * @return string | \SimpleXMLElement
+     * @return string|\SimpleXMLElement
      */
     public function trash($guid)
     {
@@ -82,14 +82,15 @@ class Documents extends RightSignature
      *      'expires_in' => '5 days',
      * ]
      *
-     * @return string | \SimpleXMLElement
+     * @return string|\SimpleXMLElement
+     * @throws \Exception
      */
-    public function send($title, $url, Recipients $recipients, array $options = [], array $tags = null)
+    public function send($title, $url, Recipients $recipients, $callback_url, array $options = [], array $tags = null)
     {
         $xml_arr = [
             'document' => [
                 'action' => isset($options['action']) ? $options['action'] : 'send',
-                'callback_location' => Yii::$app->urlManagerFrontEnd->createUrl('/callback/documents'),
+                'callback_location' => $callback_url,
                 'subject' => $title,
                 'expires_in' => isset($options['expires_in']) ? $options['expires_in'] : '5 days',
                 'use_text_tags' => isset($options['use_text_tags']) ? $options['use_text_tags'] : 'true',
@@ -102,12 +103,10 @@ class Documents extends RightSignature
         ];
         if (!empty($tags)) $xml_arr['document']['tags'] = $tags;
         $xml = $this->buildXmlFromArray($xml_arr);
-        //header("Content-Type: text/xml");echo $xml->saveXML(); exit;
-        //if (count($recipients->getRecipients()) > 1) {header("Content-Type: text/xml");echo $xml->saveXML(); exit;}
         $data = $this->request("/api/documents/", true, $xml->saveXML());
         $res = (array) simplexml_load_string($data);
         if (!isset($res['guid'])) {
-            throw new Exception($res['message']);
+            throw new \Exception($res['message']);
         }
         return $this->prepareResult($data);
     }
@@ -119,7 +118,7 @@ class Documents extends RightSignature
      *
      * @param string $guid the document number in RightSignature field guid in getList return
      *
-     * @return string | \SimpleXMLElement
+     * @return string|\SimpleXMLElement
      */
     public function getSignerLinks($guid)
     {
@@ -134,7 +133,7 @@ class Documents extends RightSignature
      *
      * @param string $guid the document number in RightSignature field guid in getList return
      *
-     * @return string | \SimpleXMLElement
+     * @return string|\SimpleXMLElement
      */
     public function sendReminders($guid)
     {
@@ -159,11 +158,11 @@ class Documents extends RightSignature
                 }
             }
             if (empty($token)) {
-                throw new Exception("Recipient {$recipient} not found");
+                throw new \Exception("Recipient {$recipient} not found");
             }
         }
         else {
-            throw new Exception("Please set the recipient");
+            throw new \Exception("Please set the recipient");
         }
         return "https://rightsignature.com/signatures/embedded?rt={$token}";
     }
