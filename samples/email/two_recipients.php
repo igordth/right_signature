@@ -7,6 +7,8 @@
 use right_signature\RightSignature;
 use right_signature\api\Recipients;
 
+require_once('../autoload.php');
+
 // load config
 $config = include('../config.php');
 
