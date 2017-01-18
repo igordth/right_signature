@@ -15,7 +15,7 @@ require_once('../autoload.php');
 $config = include('../config.php');
 
 // set relation url to file
-$url_to_file = '/samples/resources/pdf/two_recipient_with_type_fields.pdf';
+$url_to_file = '/samples/resources/pdf/two_recipients_with_type_fields.pdf';
 
 $rightSignature = new RightSignature($config['token']);
 $documentsApi = $rightSignature->loadDocumentsApi();

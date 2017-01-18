@@ -15,14 +15,14 @@ require_once('../autoload.php');
 $config = include('../config.php');
 
 // set relation url to file
-$url_to_file = '/samples/resources/pdf/two_recipient_with_type_fields.pdf';
+$url_to_file = '/samples/resources/pdf/two_recipients_with_type_fields.pdf';
 
 $rightSignature = new RightSignature($config['token']);
 $documentsApi = $rightSignature->loadDocumentsApi();
 
 // create recipients
 $recipients = new Recipients();
-foreach ($config['one_recipient']['recipients'] as $v) {
+foreach ($config['two_recipients']['recipients'] as $v) {
     $recipients->add($v['name'], 'noemail@rightsignature.com', Recipients::ROLE_SIGNER, true);
 }
 // set sender (owner of token) role to copy
@@ -33,7 +33,7 @@ $documentsApi->setResultType(RightSignature::RESULT_TYPE_SIMPLE_XML);
 
 // send document to sign
 $output = (array) $documentsApi->send(
-    'One recipient',
+    'Two recipient with type fields',
     $config['base_url'] . $url_to_file,
     $recipients,
     $config['base_url'] . '/callback.php'

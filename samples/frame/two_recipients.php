@@ -20,7 +20,7 @@ $documentsApi = $rightSignature->loadDocumentsApi();
 
 // create recipients
 $recipients = new Recipients();
-foreach ($config['one_recipient']['recipients'] as $v) {
+foreach ($config['two_recipients']['recipients'] as $v) {
     $recipients->add($v['name'], 'noemail@rightsignature.com', Recipients::ROLE_SIGNER, true);
 }
 // set sender (owner of token) role to copy
@@ -31,7 +31,7 @@ $documentsApi->setResultType(RightSignature::RESULT_TYPE_SIMPLE_XML);
 
 // send document to sign
 $output = (array) $documentsApi->send(
-    'One recipient',
+    'Two recipient',
     $config['base_url'] . $url_to_file,
     $recipients,
     $config['base_url'] . '/callback.php'
@@ -49,9 +49,9 @@ $link_signer_b = $documentsApi->getSignLink($guid, 'signer_B');
     </head>
     <body>
         <h3>Sign document by recipient A:</h3>
-        <iframe width="706px" scrolling="no" height="600px" frameborder="0" id="signing-frame" src="<?= $link_signer_a ?>&width=600&height=600"></iframe>
+        <iframe width="706px" scrolling="no" height="600px" frameborder="0" id="signing-frame-a" src="<?= $link_signer_a ?>&width=600&height=600"></iframe>
 
         <h3>Sign document by recipient B:</h3>
-        <iframe width="706px" scrolling="no" height="600px" frameborder="0" id="signing-frame" src="<?= $link_signer_b ?>&width=600&height=600"></iframe>
+        <iframe width="706px" scrolling="no" height="600px" frameborder="0" id="signing-frame-b" src="<?= $link_signer_b ?>&width=600&height=600"></iframe>
     </body>
 </html>
