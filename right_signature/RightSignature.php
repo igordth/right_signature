@@ -139,9 +139,9 @@ class RightSignature
     protected function objectToArray($xml_object)
     {
         $out = [];
-        foreach ( (array) $xml_object as $index => $node )
-            $out[$index] = ( is_object ( $node ) ) ? $this->objectToArray ( $node ) : $node;
-
+        foreach ( (array) $xml_object as $index => $node) {
+            $out[$index] = (is_object($node)) ? $this->objectToArray($node) : $node;
+        }
         return $out;
     }
 }

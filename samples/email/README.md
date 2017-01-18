@@ -1,0 +1,1 @@
+In this sample Right Signature send link to recipients email for sign current document
