@@ -24,6 +24,9 @@ foreach ($config['one_recipient']['recipients'] as $v) {
 // set sender (owner of token) role to copy
 $recipients->setSenderRole(Recipients::ROLE_CC);
 
+// set result type to xml
+$documentsApi->setResultType(RightSignature::RESULT_TYPE_XML);
+
 // send document to sign
 $output = $documentsApi->send(
     'One recipient',
